@@ -35,7 +35,7 @@ test('Client App with Page Object Model', async ({page})=>{
     const orderId = await page.locator(".em-spacer-1 .ng-star-inserted").textContent();
     console.log(orderId);
 
-    await page.locator("button[routerlink*='myorders']").click();
+    await page.locator("button[routerl    git push -u origin main    git push -u origin mainink*='myorders']").click();
     await page.locator("tbody").waitFor(); //The test waits for the element with the tag 'tbody' to be present in the DOM before proceeding with further actions or assertions
     const rows = await page.locator("tbody tr");
     const rowCount = await rows.count(); //await page.locator("tbody tr").count();
