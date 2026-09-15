@@ -1,13 +1,15 @@
-const {test, expect} = require('@playwright/test');
+const { test, expect } = require('@playwright/test');
+const { CommonActions } = require('../utils/commonActions');
 
-test("Alerts and Frames Test", async ({page})=>{
+test("Alerts and Frames Test", async ({ page }) => {
+   //const commonActions = new CommonActions(page);
 
     await page.goto("https://rahulshettyacademy.com/AutomationPractice/");
 
     await expect(page.locator("#displayed-text")).toBeVisible();
     await page.locator("#hide-textbox").click();
     await expect(page.locator("#displayed-text")).toBeHidden();//to check if the element is hidden
-    page.on('dialog', dialog => dialog.accept()); //to accept the alert and on is an event listener used to handle the alert
+    page.on('dialog', async dialog => await dialog.accept()); //to accept the alert and on is an event listener used to handle the alert
      // page.on('dialog', dialog => dialog.dismiss()); //to dismiss the alert
     await page.locator("#confirmbtn").click();
 
@@ -19,4 +21,4 @@ test("Alerts and Frames Test", async ({page})=>{
     const blinkingText = framesPage.locator(".blinkingText");
     await expect(blinkingText).toBeVisible();
     console.log(await blinkingText.textContent());
-})
+});
