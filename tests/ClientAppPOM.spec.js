@@ -3,15 +3,16 @@ const {LoginPage} = require('../pages/LoginPage'); //we have .. as path of pages
 const {DashboardPage} = require('../pages/DashboardPage');
 const {CartPage} = require('../pages/CartPage');
 const { log } = require('node:console');
+const dataSet = JSON.parse(JSON.stringify(require('../utils/placeOrderTestData.json'))); //The JSON.parse() function is used to parse a JSON string into a JavaScript object, and the JSON.stringify() function is used to convert a JavaScript object into a JSON string
 
-
-test('Client App with Page Object Model', async ({page})=>{
+for (const data of dataSet) { //test data parameterization for multiple data sets, the test will run for each data set in the array
+test(`Client App with Page Object Model for ${data.productName}`, async ({page})=>{
     
-    const productName = 'ZARA COAT 3';
+    const productName = data.productName;
     const products = page.locator('.card-body');
-    const email = 'jshanmugam@euclid.com';
-    const password = 'Window44$';
-    
+    const email = data.email;
+    const password = data.password;
+
     const loginPage = new LoginPage(page);
     await loginPage.goTo();
     await loginPage.login(email, password);
@@ -21,7 +22,7 @@ test('Client App with Page Object Model', async ({page})=>{
     await dashboardPage.navigateToCart();
 
     const cartPage = new CartPage(page);
-    await cartPage.verifyAddedProductIsDisplayed();
+    await cartPage.verifyAddedProductIsDisplayed(productName);
     await cartPage.navigateToCheckout();
 
     const checkoutPage = new CheckoutPage(page);
@@ -54,3 +55,4 @@ test('Client App with Page Object Model', async ({page})=>{
 
     }
 );
+}
