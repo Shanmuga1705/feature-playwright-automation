@@ -2,6 +2,7 @@ const {test, expect} = require('@playwright/test');
 const {LoginPage} = require('../pages/LoginPage'); //we have .. as path of pages is outside the package test folder
 const {DashboardPage} = require('../pages/DashboardPage');
 const {CartPage} = require('../pages/CartPage');
+const {CheckoutPage} = require('../pages/CheckoutPage');
 const { log } = require('node:console');
 const dataSet = JSON.parse(JSON.stringify(require('../utils/placeOrderTestData.json'))); //The JSON.parse() function is used to parse a JSON string into a JavaScript object, and the JSON.stringify() function is used to convert a JavaScript object into a JSON string
 
@@ -18,7 +19,7 @@ test(`Client App with Page Object Model for ${data.productName}`, async ({page})
     await loginPage.login(email, password);
     
     const dashboardPage = new DashboardPage(page);
-    await dashboardPage.searchProductAddCart();
+    await dashboardPage.searchProductAddCart(productName);
     await dashboardPage.navigateToCart();
 
     const cartPage = new CartPage(page);
@@ -29,14 +30,14 @@ test(`Client App with Page Object Model for ${data.productName}`, async ({page})
     await checkoutPage.fillPersonalInfoForm();
     await checkoutPage.selectCountry();
 
-    await checkoutPage.verifyEmailIsDisplayed();
+    await checkoutPage.verifyEmailIsDisplayed(email);
     await checkoutPage.clickPlaceOrder();
 
     await expect(page.locator(".hero-primary")).toHaveText(" Thankyou for the order. "); //The test expects the text content of the element with the class 'hero-primary' to be equal to "THANKYOU FOR THE ORDER.", indicating that the order has been placed successfully
     const orderId = await page.locator(".em-spacer-1 .ng-star-inserted").textContent();
     console.log(orderId);
 
-    await page.locator("button[routerl    git push -u origin main    git push -u origin mainink*='myorders']").click();
+    await page.locator("button[routerlink*='myorders']").click();
     await page.locator("tbody").waitFor(); //The test waits for the element with the tag 'tbody' to be present in the DOM before proceeding with further actions or assertions
     const rows = await page.locator("tbody tr");
     const rowCount = await rows.count(); //await page.locator("tbody tr").count();
